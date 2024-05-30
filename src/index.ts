@@ -5,7 +5,6 @@ import { validateEmployee, validateWindow } from "./middleware/Employee.middlewa
 import express, {Request,Response,NextFunction} from "express";
 import createEmployeeRouter from "./routes/Employees.route";
 import cors from "cors"
-import { exit } from "process";
 
 async function main(){
     let whitelist = ['http://localhost:5173']
@@ -19,6 +18,7 @@ async function main(){
     }
     const employee_router = createEmployeeRouter(connection);
     const app = express();
+
     app.use(cors({origin:whitelist}))
     app.use(express.json());
 

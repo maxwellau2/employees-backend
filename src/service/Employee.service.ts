@@ -20,7 +20,7 @@ export class DbConnection{
     }
 
     private EmployeeFactory(name: string, salary:number, department:string) : Employee{
-        let new_employee = new Employee();
+        const new_employee = new Employee();
         new_employee.name = name;
         new_employee.department = department;
         new_employee.salary = salary;
@@ -28,12 +28,12 @@ export class DbConnection{
     }
 
     public async GetAllEmployees() : Promise<Employee[]>{
-        let all_employees = await this.repository.find();
+        const all_employees = await this.repository.find();
         return all_employees;
     }
 
     public async CreateNewEmployee(name: string, salary:number, department:string) : Promise<Employee|null>{
-        let new_employee = this.EmployeeFactory(name, salary, department);
+        const new_employee = this.EmployeeFactory(name, salary, department);
         try{
             await this.repository.save(new_employee);
             return new_employee;
@@ -44,12 +44,12 @@ export class DbConnection{
     }
 
     public async GetEmployeeById(id:number) : Promise<Employee|null>{
-        let employee = await this.repository.findOneBy({id})
+        const employee = await this.repository.findOneBy({id})
         return employee;
     }
 
     public async DeleteEmployee(id:number) : Promise<boolean>{
-        let employee = await this.GetEmployeeById(id);
+        const employee = await this.GetEmployeeById(id);
         if (employee){
             await this.repository.remove(employee);
             return true;
@@ -59,20 +59,20 @@ export class DbConnection{
 
     public async UpdateEmployee(id:number, name: string, salary:number, department:string) : Promise<Employee|null>{
         // await this.repository.update(id, { name, salary, department })
-        let target_employee = await this.GetEmployeeById(id);
+        const target_employee = await this.GetEmployeeById(id);
         console.log(target_employee)
         if (target_employee){
             target_employee.name = name;
             target_employee.salary = salary;
             target_employee.department = department;
-            let updated_employee = await this.repository.save(target_employee);
+            const updated_employee = await this.repository.save(target_employee);
             return updated_employee; // updated
         }
         return null; // no updates
     }
 
     public async GetEmployeeWindow(start_number: number, window_size: number){
-        let all_employees = await this.GetAllEmployees();
+        const all_employees = await this.GetAllEmployees();
         if (all_employees.length <= start_number){
             return null; // window of employees DNE
         }
