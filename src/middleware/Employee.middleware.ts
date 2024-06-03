@@ -18,7 +18,7 @@ export const validateEmployee = (req: Request, res: Response, next: NextFunction
   };
 
 export const windowSchema = Joi.object({
-  start: Joi.number().greater(-1).required(),
+  pageNumber: Joi.number().greater(-1).required(),
   windowSize: Joi.number().greater(0).required(),
 });
 

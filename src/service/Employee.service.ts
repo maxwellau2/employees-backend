@@ -2,24 +2,23 @@ import "reflect-metadata"
 import { DataSource, Repository } from "typeorm"
 import { Employee } from "../model/Employee.model";
 import * as dotenv from 'dotenv';
-import { AppDataSource } from "../database/Employee.data-source"
+import { employeesDataSource } from "../database/Employee.dataSourceDev"
 
 dotenv.config()
-export class DbConnection{
+interface EmployeeWindow{
+    totalEmployees: number,
+    employees: Employee[]
+}
+export class employeesConnection{
+
+    repository : Repository<Employee>
     datasource: DataSource;
-    repository: Repository<Employee>;
-    constructor(){
-        this.datasource = AppDataSource;
-        // this.initialize();
-    }
-    public async initialize(){
-        await this.datasource.initialize().then(async () => {
-            console.log("Db Initialized!");
-            this.repository = this.datasource.getRepository(Employee); 
-        }).catch(error => console.log(error))
+    constructor(repository: Repository<Employee>, datasource: DataSource){
+        this.repository = repository
+        this.datasource = datasource
     }
 
-    private EmployeeFactory(name: string, salary:number, department:string) : Employee{
+    private employeeFactory(name: string, salary:number, department:string) : Employee{
         const new_employee = new Employee();
         new_employee.name = name;
         new_employee.department = department;
@@ -27,13 +26,13 @@ export class DbConnection{
         return new_employee;
     }
 
-    public async GetAllEmployees() : Promise<Employee[]>{
+    public async getAllEmployees() : Promise<Employee[]>{
         const all_employees = await this.repository.find();
         return all_employees;
     }
 
-    public async CreateNewEmployee(name: string, salary:number, department:string) : Promise<Employee|null>{
-        const new_employee = this.EmployeeFactory(name, salary, department);
+    public async createNewEmployee(name: string, salary:number, department:string) : Promise<Employee|null>{
+        const new_employee = this.employeeFactory(name, salary, department);
         try{
             await this.repository.save(new_employee);
             return new_employee;
@@ -43,13 +42,13 @@ export class DbConnection{
         }
     }
 
-    public async GetEmployeeById(id:number) : Promise<Employee|null>{
+    public async getEmployeeById(id:number) : Promise<Employee|null>{
         const employee = await this.repository.findOneBy({id})
         return employee;
     }
 
-    public async DeleteEmployee(id:number) : Promise<boolean>{
-        const employee = await this.GetEmployeeById(id);
+    public async deleteEmployee(id:number) : Promise<boolean>{
+        const employee = await this.getEmployeeById(id);
         if (employee){
             await this.repository.remove(employee);
             return true;
@@ -57,9 +56,9 @@ export class DbConnection{
         return false;
     }
 
-    public async UpdateEmployee(id:number, name: string, salary:number, department:string) : Promise<Employee|null>{
+    public async updateEmployee(id:number, name: string, salary:number, department:string) : Promise<Employee|null>{
         // await this.repository.update(id, { name, salary, department })
-        const target_employee = await this.GetEmployeeById(id);
+        const target_employee = await this.getEmployeeById(id);
         console.log(target_employee)
         if (target_employee){
             target_employee.name = name;
@@ -71,16 +70,17 @@ export class DbConnection{
         return null; // no updates
     }
 
-    public async GetEmployeeWindow(start_number: number, window_size: number){
-        const all_employees = await this.GetAllEmployees();
+    public async getEmployeeWindow(page_number: number, window_size: number): Promise<EmployeeWindow>{
+        const start_number = page_number*window_size;
+        const all_employees = await this.getAllEmployees();
         if (all_employees.length <= start_number){
             return null; // window of employees DNE
         }
         else if (all_employees.length <= start_number + window_size){
             // return until end
-            return all_employees.slice(start_number, all_employees.length-1);
+            return {employees: all_employees.slice(start_number, all_employees.length), totalEmployees: all_employees.length}
         }
-        return all_employees.slice(start_number, start_number+window_size);
-    }
+        return { employees: all_employees.slice(start_number, start_number+window_size), totalEmployees: all_employees.length}
+    };
 }
 

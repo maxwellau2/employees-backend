@@ -1,33 +1,33 @@
 import { Request, Response } from "express";
-import { DbConnection } from "../service/Employee.service";
+import { employeesConnection } from "../service/Employee.service";
 
-export const GetAllEmployeesController = (connection:DbConnection) =>  async (req:Request, res:Response) =>{
-    const employees = await connection.GetAllEmployees();
+export const getAllEmployeesController = (connection:employeesConnection) =>  async (req:Request, res:Response) =>{
+    const employees = await connection.getAllEmployees();
     return res.status(200).send(employees)
 }
 
-export const CreateNewEmployeeController = (connection:DbConnection) => async (req:Request, res:Response)=>{
+export const createNewEmployeeController = (connection:employeesConnection) => async (req:Request, res:Response)=>{
     // console.log(req.body);
     const body = req.body;
     console.log(body);
     
-    const resultant_employee = await connection.CreateNewEmployee(body.name, body.salary, body.department);
-    console.log(connection.GetAllEmployees())
+    const resultant_employee = await connection.createNewEmployee(body.name, body.salary, body.department);
+    console.log(connection.getAllEmployees())
     return res.status(200).json({status:"success", data:resultant_employee});
 }
 
-export const GetEmployeeByIdController = (connection:DbConnection) => (connection:DbConnection) => async (req:Request, res:Response) =>{
-    const employee = await connection.GetEmployeeById(parseInt(req.params.emp_id, 10));
+export const getEmployeeByIdController = (connection:employeesConnection) => async (req:Request, res:Response) =>{
+    const employee = await connection.getEmployeeById(parseInt(req.params.emp_id, 10));
     if (employee){
         return res.status(200).send(employee);    
     }
     return res.status(404).send("Employee Not Found");
 }
 
-export const GetEmployeeWindowController = (connection:DbConnection) => async (req: Request, res: Response) => {
-    const start = parseInt(req.query.start as string, 10);
+export const getEmployeeWindowController = (connection:employeesConnection) => async (req: Request, res: Response) => {
+    const pageNumber = parseInt(req.query.pageNumber as string, 10);
     const windowSize = parseInt(req.query.windowSize as string, 10);
-    let employees = await connection.GetEmployeeWindow(start, windowSize);
+    let employees = await connection.getEmployeeWindow(pageNumber, windowSize);
     if (employees) {
         return res.status(200).send(employees);
     }
@@ -35,11 +35,11 @@ export const GetEmployeeWindowController = (connection:DbConnection) => async (r
     return res.status(404).json({ "message": "window size exceeded" });
 }
 
-export const UpdateEmployeeController = (connection:DbConnection) =>  async (req:Request, res:Response)=>{
+export const updateEmployeeController = (connection:employeesConnection) =>  async (req:Request, res:Response)=>{
     const emp_id = parseInt(req.params.emp_id, 10);
-    const original_employee = await connection.GetEmployeeById(emp_id);
+    const original_employee = await connection.getEmployeeById(emp_id);
     const { name, salary, department } = req.body;
-    const updated_employee = await connection.UpdateEmployee(emp_id, name, Number(salary), department);
+    const updated_employee = await connection.updateEmployee(emp_id, name, Number(salary), department);
     if (updated_employee){
         if (updated_employee == original_employee){
             return res.status(304).send("no change");
@@ -49,11 +49,11 @@ export const UpdateEmployeeController = (connection:DbConnection) =>  async (req
     return res.status(404).send("bad request");
 }
 
-export const DeleteEmployeeController = (connection:DbConnection) => async (req:Request, res:Response)=>{
-    const result = await connection.DeleteEmployee(parseInt(req.params.emp_id, 10))
+export const deleteEmployeeController = (connection:employeesConnection) => async (req:Request, res:Response)=>{
+    const result = await connection.deleteEmployee(parseInt(req.params.emp_id, 10))
     console.log(result)
     if (result){
-        console.log("hiii bitchh")
+        console.log("Deleted Employee")
         return res.status(200).json({message:"successful operation"});
     }
     return res.status(404).json({message:"bad request"});
