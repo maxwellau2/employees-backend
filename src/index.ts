@@ -26,8 +26,8 @@ async function main(){
     })
     
     // adding routes
-    const employee_router = createEmployeeRouter(connection);
-    app.use(employee_router)
+    const employeeRouter = createEmployeeRouter(connection);
+    app.use(employeeRouter)
 
     app.listen(3000, ()=>{
         console.log("Listening on http://localhost:3000");

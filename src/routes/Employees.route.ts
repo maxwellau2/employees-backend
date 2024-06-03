@@ -11,22 +11,22 @@ import {
 } from "../controller/Employee.controller";
 
 const createEmployeeRouter = (connection: employeesConnection)=>{
-    const employee_router = Router();
+    const employeeRouter = Router();
     
-    employee_router.post("/employee", validateEmployee, createNewEmployeeController(connection))
+    employeeRouter.post("/employee", validateEmployee, createNewEmployeeController(connection))
     
-    employee_router.get("/employee", getAllEmployeesController(connection))
+    employeeRouter.get("/employee", getAllEmployeesController(connection))
     
-    employee_router.get("/employee/:emp_id", getEmployeeByIdController(connection))
+    employeeRouter.get("/employee/:emp_id", getEmployeeByIdController(connection))
     
-    employee_router.get("/employees", validateWindow, getEmployeeWindowController(connection))
+    employeeRouter.get("/employees", validateWindow, getEmployeeWindowController(connection))
     
-    employee_router.put("/employee/:emp_id", validateEmployee, updateEmployeeController(connection))
+    employeeRouter.put("/employee/:emp_id", validateEmployee, updateEmployeeController(connection))
     
-    employee_router.delete("/employee/:emp_id",deleteEmployeeController(connection))
+    employeeRouter.delete("/employee/:emp_id",deleteEmployeeController(connection))
     
     
-    return employee_router
+    return employeeRouter
 }
 
 export default createEmployeeRouter
