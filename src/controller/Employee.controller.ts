@@ -12,7 +12,7 @@ export const createNewEmployeeController = (connection:employeesConnection) => a
     console.log(body);
     
     const resultant_employee = await connection.createNewEmployee(body.name, body.salary, body.department);
-    console.log(connection.getAllEmployees())
+    console.log(await connection.getAllEmployees())
     return res.status(200).json({status:"success", data:resultant_employee});
 }
 

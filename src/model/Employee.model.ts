@@ -9,7 +9,7 @@ export class Employee {
     @Column()
     name: string
 
-    @Column()
+    @Column({type:"float"})
     salary: number
 
     @Column()

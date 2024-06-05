@@ -33,6 +33,7 @@ export class employeesConnection{
 
     public async createNewEmployee(name: string, salary:number, department:string) : Promise<Employee|null>{
         const new_employee = this.employeeFactory(name, salary, department);
+        console.log(new_employee)
         try{
             await this.repository.save(new_employee);
             return new_employee;
