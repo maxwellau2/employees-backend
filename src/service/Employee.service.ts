@@ -74,7 +74,7 @@ export class employeesConnection{
         const start_number = page_number*window_size;
         const all_employees = await this.getAllEmployees();
         if (all_employees.length <= start_number){
-            return null; // window of employees DNE
+            return {employees: [], totalEmployees: all_employees.length}; // window of employees DNE
         }
         else if (all_employees.length <= start_number + window_size){
             // return until end

@@ -32,7 +32,7 @@ export const getEmployeeWindowController = (connection:employeesConnection) => a
         return res.status(200).send(employees);
     }
     // employees is null
-    return res.status(404).json({ "message": "window size exceeded" });
+    return res.status(404).json({ "message": "window size exceeded", "data" : [], "totalEmployees":0 });
 }
 
 export const updateEmployeeController = (connection:employeesConnection) =>  async (req:Request, res:Response)=>{
