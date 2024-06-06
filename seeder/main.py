@@ -31,5 +31,5 @@ def delete_all_employees():
         print(response.json())
 
 
-delete_all_employees()
-# mock_employees(20)
+# delete_all_employees()
+mock_employees(31)

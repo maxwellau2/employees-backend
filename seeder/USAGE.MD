@@ -1,6 +1,7 @@
 Usage
 
 assuming you have python installed on your machine, and venv
+
 Ubuntu CLI usage, (not sure about mac)
 ``` bash
 cd seeder
