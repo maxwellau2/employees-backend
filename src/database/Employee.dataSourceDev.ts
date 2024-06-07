@@ -1,6 +1,7 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { Employee } from "../model/Employee.model";
+import { User } from "../model/Users.model";
 import { DataSourceOptions } from "typeorm";
 import * as dotenv from 'dotenv';
 dotenv.config()
@@ -16,7 +17,7 @@ const connectionOptions : DataSourceOptions = {
     database: process.env.DB_NAME,
     synchronize: true,
     logging: false,
-    entities: [Employee],
+    entities: [Employee, User],
     migrations: ["src/migration/*{.ts,.js}"],
     subscribers: [],
 }

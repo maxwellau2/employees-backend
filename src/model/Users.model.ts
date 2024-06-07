@@ -1,17 +1,17 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity()
-export class Employee {
+export class User {
 
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    name: string
-
-    @Column({type:"float"})
-    salary: number
+    username: string
 
     @Column()
-    department: string
+    password: string // password is hashed with sha256
+
+    @Column()
+    departmentId: number;
 }

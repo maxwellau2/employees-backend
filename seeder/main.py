@@ -2,7 +2,7 @@ from faker import Faker
 from random import randint
 import requests
 
-URI = "http://localhost:3000/employee/"
+URI = "http://localhost:3000/api/employee/"
 
 def mock_employees(number_of_employees: int):
     # fake name generator
@@ -12,7 +12,7 @@ def mock_employees(number_of_employees: int):
     for i in range(0,number_of_employees):
         data = {}
         data["name"] = fake.name()
-        data["salary"] = randint(80000,150000)
+        data["salary"] = randint(8000000,15000000)/100
         data["department"] = available_departments[randint(0,1)]
         response = requests.post(URI, json=data)
         print(response.json())
