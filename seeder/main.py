@@ -7,9 +7,10 @@ URI = "http://localhost:3000/api/employee/"
 
 sess = requests.Session()
 # please create the account as shown here -------------------************
-res = sess.post("http://localhost:3000/users/login", json={"username": "admin", "password": "Admin123!"})
+res = sess.post("http://localhost:3000/users/login", json={"username": "admin", "password": "Admin1!"})
 cookie = requests.utils.dict_from_cookiejar(res.cookies)
-sess.cookies.update(res.cookies)
+print(cookie)
+# sess.cookies.update(res.cookies)
 cookie = sess.cookies.items()[0][1]
 print(cookie)
 # os.abort()
