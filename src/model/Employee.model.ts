@@ -1,17 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity()
 export class Employee {
-
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    name: string
+    name: string;
 
-    @Column({type:"float"})
-    salary: number
+    @Column({ type: "float" })
+    salary: number;
 
     @Column()
-    department: string
+    department: string;
+
+    @Column()
+    departmentId: number;
 }

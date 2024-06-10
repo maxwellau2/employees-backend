@@ -10,51 +10,55 @@ import cookieParser from "cookie-parser";
 import createUsersRouter from "./routes/Users.route";
 
 async function main() {
-  let whitelist = ["http://localhost:5173"];
+    let whitelist = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
-  // initializing DB
-  await employeesDataSource.initialize();
-  const employeesRepository = employeesDataSource.getRepository(Employee);
-  const usersRepository = employeesDataSource.getRepository(User);
-  const employeesConnector = new employeesConnection(
-    employeesRepository,
-    employeesDataSource
-  );
-  const usersConnector = new usersService(usersRepository, employeesDataSource);
+    // initializing DB
+    await employeesDataSource.initialize();
+    const employeesRepository = employeesDataSource.getRepository(Employee);
+    const usersRepository = employeesDataSource.getRepository(User);
+    const employeesConnector = new employeesConnection(
+        employeesRepository,
+        employeesDataSource
+    );
+    const usersConnector = new usersService(
+        usersRepository,
+        employeesDataSource
+    );
 
-  const app = express();
+    const app = express();
 
-  // using cors and json, can add more middleware here
-  // cors options
-  const corsOptions = {
-    origin: function (origin, callback) {
-      if (whitelist.indexOf(origin) !== -1 || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  };
-  app.use(cors(corsOptions));
-  app.use(cookieParser());
-  app.use(express.json());
+    // using cors and json, can add more middleware here
+    // cors options
 
-  // base GET request
-  app.get("/", (req: Request, res: Response) => {
-    console.log(req);
-    return res.send("hiii world");
-  });
+    app.use(cookieParser());
+    const corsOptions = {
+        origin: function (origin, callback) {
+            if (whitelist.indexOf(origin) !== -1 || !origin) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+    };
+    app.use(cors(corsOptions));
+    app.use(express.json());
 
-  // adding routes
-  const employeeRouter = createEmployeeRouter(employeesConnector);
-  const usersRouter = createUsersRouter(usersConnector);
-  app.use("/api", employeeRouter);
-  app.use("/users", usersRouter);
+    // base GET request
+    app.get("/", (req: Request, res: Response) => {
+        console.log(req);
+        return res.send("hiii world");
+    });
 
-  app.listen(3000, () => {
-    console.log("Listening on http://localhost:3000");
-  });
+    // adding routes
+    const employeeRouter = createEmployeeRouter(employeesConnector);
+    const usersRouter = createUsersRouter(usersConnector);
+    app.use("/api", employeeRouter);
+    app.use("/users", usersRouter);
+
+    app.listen(3000, () => {
+        console.log("Listening on http://localhost:3000");
+    });
 }
 
 main();

@@ -1,55 +1,54 @@
 import e, { Express, Request, Response, Router } from "express";
 import {
-  validateEmployee,
-  validateWindow,
+    validateEmployee,
+    validateWindow,
 } from "../middleware/Employee.middleware";
 import { employeesConnection } from "../service/Employee.service";
 import {
-  getAllEmployeesController,
-  getEmployeeWindowController,
-  createNewEmployeeController,
-  getEmployeeByIdController,
-  updateEmployeeController,
-  deleteEmployeeController,
+    getAllEmployeesController,
+    getEmployeeWindowController,
+    createNewEmployeeController,
+    getEmployeeByIdController,
+    updateEmployeeController,
+    deleteEmployeeController,
 } from "../controller/Employee.controller";
 import { authenticateJWT } from "../middleware/Authentication.middleware";
 
 const createEmployeeRouter = (connection: employeesConnection) => {
-  const employeeRouter = Router();
+    const employeeRouter = Router();
+    employeeRouter.use(authenticateJWT);
 
-  employeeRouter.use(authenticateJWT);
+    employeeRouter.post(
+        "/employee",
+        validateEmployee,
+        createNewEmployeeController(connection)
+    );
 
-  employeeRouter.post(
-    "/employee",
-    validateEmployee,
-    createNewEmployeeController(connection)
-  );
+    employeeRouter.get("/employee", getAllEmployeesController(connection));
 
-  employeeRouter.get("/employee", getAllEmployeesController(connection));
+    employeeRouter.get(
+        "/employee/:emp_id",
+        getEmployeeByIdController(connection)
+    );
 
-  employeeRouter.get(
-    "/employee/:emp_id",
-    getEmployeeByIdController(connection)
-  );
+    employeeRouter.get(
+        "/employees",
+        validateWindow,
+        getEmployeeWindowController(connection)
+    );
 
-  employeeRouter.get(
-    "/employees",
-    validateWindow,
-    getEmployeeWindowController(connection)
-  );
+    employeeRouter.put(
+        "/employee/:emp_id",
+        validateEmployee,
+        updateEmployeeController(connection)
+    );
 
-  employeeRouter.put(
-    "/employee/:emp_id",
-    validateEmployee,
-    updateEmployeeController(connection)
-  );
+    employeeRouter.delete(
+        "/employee/:emp_id",
+        deleteEmployeeController(connection)
+    );
 
-  employeeRouter.delete(
-    "/employee/:emp_id",
-    deleteEmployeeController(connection)
-  );
-
-  return employeeRouter;
+    return employeeRouter;
 };
 
 export default createEmployeeRouter;
